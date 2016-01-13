@@ -1,0 +1,28 @@
+{
+  "name": "gl-fluid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamieowen/gl-fluid.git"
+  },
+  "author": "Jamie Owen <hello@jamieowen.com> (=)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamieowen/gl-fluid/issues"
+  },
+  "homepage": "https://github.com/jamieowen/gl-fluid#readme",
+  "dependencies": {
+    "a-big-triangle": "^1.0.2",
+    "gl-fbo": "^2.0.5",
+    "gl-shader": "^4.2.0",
+    "glslify": "^5.0.2"
+  }
+}

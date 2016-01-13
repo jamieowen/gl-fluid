@@ -43,7 +43,6 @@ void main()
             ) * 0.25;
     }
 
-
     // r = height
     // g = velocity
 

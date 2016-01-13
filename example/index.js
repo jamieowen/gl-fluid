@@ -4,9 +4,9 @@
 //var createShader  = require( 'gl-shader' );
 
 
-var Batch 	= require( 'gl-sprite-batch' );
+//var Batch 	= require( 'gl-sprite-batch' );
 
-//var Fluid = require( '../fluid' );
+var Fluid = require( '../Fluid' );
 
 
 window.onload = function(){
@@ -41,14 +41,18 @@ window.onload = function(){
 
 	});
 
+	console.log( fluid1d, fluid2d );
 
-	var batch = Batch( gl,{ dynamic:true } );
+	gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
+	gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
+
+	//var batch = Batch( gl,{ dynamic:true } );
+
 
 
 	raf( function render(){
 
-
-		batch.
+		fluid2d.update();
 
 		raf( render );
 	});
