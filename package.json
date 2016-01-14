@@ -24,5 +24,8 @@
     "gl-fbo": "^2.0.5",
     "gl-shader": "^4.2.0",
     "glslify": "^5.0.2"
+  },
+  "devDependencies": {
+    "gl-texture2d": "^2.0.10"
   }
 }

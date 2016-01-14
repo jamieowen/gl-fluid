@@ -62,6 +62,7 @@ Fluid.prototype = {
 		var next = this.states[ this._current ^= 1 ];
 
 		this._shader.bind();
+		this._shader.uniforms.applyDrop = false;
 		this._shader.uniforms.previous = prev.color[0].bind();
 
 		next.bind();
@@ -70,7 +71,7 @@ Fluid.prototype = {
 
 	},
 
-	brush: function( x, y, strength, texture, region ){
+	droplet: function( x, y, strength, texture, region ){
 
 		if( !region ){
 			region = {
@@ -79,6 +80,29 @@ Fluid.prototype = {
 				height: 32
 			}
 		}
+
+		console.log( 'droplet : ', x, y );
+
+		var gl = this.gl;
+
+		var prev = this.states[ this._current ];
+		var next = this.states[ this._current ^= 1 ];
+
+		this._shader.bind();
+		this._shader.uniforms.previous = prev.color[0].bind();
+		this._shader.uniforms.applyDrop = true;
+		this._shader.uniforms.droplet = texture.bind();
+
+		//gl.viewport( 0,0,)
+		next.bind();
+		drawTriangle(gl);
+		gl.bindFramebuffer( gl.FRAMEBUFFER, null );
+
+	},
+
+	texture: function(){
+
+		return this.states[ this._current].color[0];
 
 	}
 
