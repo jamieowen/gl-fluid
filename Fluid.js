@@ -1,6 +1,6 @@
 
 var Shader 		 = require( 'gl-shader' );
-var FBO	   		 = require( 'gl-fbo' );
+var FBO 		 = require( 'gl-fbo' );
 var drawTriangle = require( 'a-big-triangle' );
 var glslify 	 = require( 'glslify' );
 
@@ -25,6 +25,7 @@ var Fluid = function( gl, opts ){
 
 	this._current = 0;
 	this._mode 	  = mode;
+	this._texel   = [ 1 / w, 1 / h ];
 
 	this.states = [
 		FBO( gl, [ w, h ] ),
@@ -63,7 +64,8 @@ Fluid.prototype = {
 
 		this._shader.bind();
 		this._shader.uniforms.applyDrop = false;
-		this._shader.uniforms.previous = prev.color[0].bind();
+		this._shader.uniforms.previous = prev.color[0].bind(0);
+		this._shader.uniforms.texel = this._texel;
 
 		next.bind();
 		drawTriangle( gl );
@@ -71,7 +73,7 @@ Fluid.prototype = {
 
 	},
 
-	droplet: function( x, y, strength, texture, region ){
+	droplet: function( x, y, scale, strength, texture, region ){
 
 		if( !region ){
 			region = {
@@ -89,9 +91,12 @@ Fluid.prototype = {
 		var next = this.states[ this._current ^= 1 ];
 
 		this._shader.bind();
-		this._shader.uniforms.previous = prev.color[0].bind();
+		this._shader.uniforms.previous = prev.color[0].bind(0);
 		this._shader.uniforms.applyDrop = true;
-		this._shader.uniforms.droplet = texture.bind();
+		this._shader.uniforms.droplet = texture.bind(1);
+		this._shader.uniforms.drop_position = [ x, y ];
+		this._shader.uniforms.drop_strength = strength;
+		this._shader.uniforms.drop_scale = scale;
 
 		//gl.viewport( 0,0,)
 		next.bind();
