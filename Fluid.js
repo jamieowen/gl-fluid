@@ -26,11 +26,15 @@ var Fluid = function( gl, opts ){
 	this._current = 0;
 	this._mode 	  = mode;
 	this._texel   = [ 1 / w, 1 / h ];
+	this._shape   = [ w, h ];
 
 	this.states = [
 		FBO( gl, [ w, h ] ),
 		FBO( gl, [ w, h ] )
 	];
+
+	this.states[0].wrap = gl.MIRRORED_REPEAT;
+	this.states[1].wrap = gl.MIRRORED_REPEAT;
 
 	var vs = glslify( './glsl/fluid.vert' );
 	var fs;
@@ -73,30 +77,28 @@ Fluid.prototype = {
 
 	},
 
-	droplet: function( x, y, scale, strength, texture, region ){
-
-		if( !region ){
-			region = {
-				scale: 1,
-				width: 32,
-				height: 32
-			}
-		}
-
-		console.log( 'droplet : ', x, y );
+	droplet: function( x, y, scale, strength, texture ){
 
 		var gl = this.gl;
 
 		var prev = this.states[ this._current ];
 		var next = this.states[ this._current ^= 1 ];
 
+		if( typeof scale === 'number' ){
+			scale = [ scale, scale ];
+		}
+
+		var scaleX   = texture.shape[0] * scale[0];
+		var scaleY   = texture.shape[1] * scale[1];
+
 		this._shader.bind();
 		this._shader.uniforms.previous = prev.color[0].bind(0);
 		this._shader.uniforms.applyDrop = true;
 		this._shader.uniforms.droplet = texture.bind(1);
-		this._shader.uniforms.drop_position = [ x, y ];
+
+		this._shader.uniforms.drop_position = [ x, this._shape[1] - y ];
+		this._shader.uniforms.drop_scale 	= [ scaleX, scaleY ];
 		this._shader.uniforms.drop_strength = strength;
-		this._shader.uniforms.drop_scale = scale;
 
 		//gl.viewport( 0,0,)
 		next.bind();
@@ -107,7 +109,7 @@ Fluid.prototype = {
 
 	texture: function(){
 
-		return this.states[ this._current].color[0];
+		return this.states[ this._current ].color[0];
 
 	}
 

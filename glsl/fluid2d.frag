@@ -7,7 +7,7 @@ uniform vec2 texel;
 uniform sampler2D droplet;
 uniform bool applyDrop;
 uniform vec2 drop_position;
-uniform float drop_scale;
+uniform vec2 drop_scale;
 uniform float drop_strength;
 
 varying vec2 uv;
@@ -20,15 +20,14 @@ void main(){
 	if( applyDrop ){
 
 		vec4 value = texture2D( previous, uv );
+ 		vec2 samp = gl_FragCoord.xy - vec2( drop_position.x, drop_position.y ) + ( 0.5 * drop_scale );
+		vec2 uv = samp / drop_scale;
 
-		vec2 size = vec2( 256.0, 256.0 );
- 		vec2 samp = gl_FragCoord.xy - drop_position + ( size.xy * 0.5 );
-		vec2 uv = samp / ( size * drop_scale );
-
+		uv.y = 1.0-uv.y;
 		vec4 drop = texture2D( droplet, uv );
 
 		//value.r = ( drop.r * drop.a );
-		value.r += ( drop.r * drop.a );
+		value.r += ( drop.r * drop.a * drop_strength );
 
 		gl_FragColor = value;
 
