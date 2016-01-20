@@ -22,8 +22,6 @@ void main(){
 		vec4 value = texture2D( previous, uv );
  		vec2 samp = gl_FragCoord.xy - vec2( drop_position.x, drop_position.y ) + ( 0.5 * drop_scale );
 		vec2 uv = samp / drop_scale;
-
-		uv.y = 1.0-uv.y;
 		vec4 drop = texture2D( droplet, uv );
 
 		//value.r = ( drop.r * drop.a );

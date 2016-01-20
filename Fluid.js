@@ -81,12 +81,24 @@ Fluid.prototype = {
 
 		var gl = this.gl;
 
+		if( this._mode === '1d' ){
+			// fake for now.
+			//x = 1;
+			//y = 10;
+			console.log( x, y );
+		}
+
 		var prev = this.states[ this._current ];
 		var next = this.states[ this._current ^= 1 ];
 
 		if( typeof scale === 'number' ){
 			scale = [ scale, scale ];
 		}
+
+		var shape = this._shape;//.slice(0,this._shape.length);
+		//shape[1] = 256 * 1.01;
+		//shape[0] = 256 * 0.99; // this gives some nice effects
+		//shape[1] = 1;
 
 		var scaleX   = texture.shape[0] * scale[0];
 		var scaleY   = texture.shape[1] * scale[1];
@@ -96,12 +108,21 @@ Fluid.prototype = {
 		this._shader.uniforms.applyDrop = true;
 		this._shader.uniforms.droplet = texture.bind(1);
 
-		this._shader.uniforms.drop_position = [ x, this._shape[1] - y ];
+		this._shader.uniforms.drop_position = [ x, shape[1] - y ];
 		this._shader.uniforms.drop_scale 	= [ scaleX, scaleY ];
 		this._shader.uniforms.drop_strength = strength;
 
-		//gl.viewport( 0,0,)
+		if( this._mode === '1d' ){
+			this._shader.uniforms.min = ( shape[1] - y ) - 1;
+			this._shader.uniforms.max = ( shape[1] - y );
+		}
+
 		next.bind();
+
+		//gl.viewport( 0, y-1, shape[0], shape[1] );
+		//gl.viewport( 0,this._shape[y]/2, this._shape[0],this._shape[1] );
+		//gl.viewport( -212,10, 0, 512 - 256 );
+
 		drawTriangle(gl);
 		gl.bindFramebuffer( gl.FRAMEBUFFER, null );
 
