@@ -27,5 +27,8 @@
   },
   "devDependencies": {
     "gl-texture2d": "^2.0.10"
+  },
+  "browserify": {
+    "transform": ["glslify"]
   }
 }
